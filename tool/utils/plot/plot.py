@@ -33,10 +33,13 @@ class Plot:
             plt.figure("cost curve")
             self.plotCostCurve(cost_curve, name)
 
-        plt.show()
+        # plt.show()
+
         # plt.show(block=False)
         # plt.pause(0.5)  # 10초 동안 보여주고
         # plt.close()  # 창 닫기
+
+        return self.fig
 
     def plotEnv(self, name: str) -> None:
         '''
@@ -87,6 +90,8 @@ class Plot:
 
         plt.title(name)
         plt.axis("equal")
+
+        return self.fig
 
     def plotExpand(self, expand: list) -> None:
         '''

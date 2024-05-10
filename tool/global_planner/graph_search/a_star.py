@@ -124,6 +124,6 @@ class AStar(GraphSearcher):
 
         path = path[::-1]
         # print(path)
-        self.plot.animation(path, str(self), cost, expand)
+        fig = self.plot.animation(path, str(self), cost, expand)
 
-        return path
+        return path, fig
