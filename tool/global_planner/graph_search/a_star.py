@@ -115,6 +115,10 @@ class AStar(GraphSearcher):
             path.append(node.current)
         return cost, path
 
+    def pos_update(self, start, goal):
+        self.start = start
+        self.goal = goal
+
     def run(self):
         """
         Running both planning and animation.
@@ -123,7 +127,7 @@ class AStar(GraphSearcher):
         #
 
         path = path[::-1]
-        # print(path)
+        print(path)
         fig = self.plot.animation(path, str(self), cost, expand)
 
         return path, fig
