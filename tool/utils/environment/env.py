@@ -70,14 +70,27 @@ class Grid(Env):
         # user-defined obstacles        
         # for i in range(10, 21):
         #     obstacles.add((i, 15))
+
+        # for i in range(10, 30):
+        #     obstacles.add((10, i))
+        # for i in range(20):
+        #     obstacles.add((20, i))
+        # for i in range(10, 30):
+        #     obstacles.add((30, i))
+        # for i in range(20):
+        #     obstacles.add((40, i))
+
         for i in range(10, 30):
-            obstacles.add((10, i))
-        for i in range(20):
-            obstacles.add((20, i))
-        for i in range(10, 30):
-            obstacles.add((30, i))
-        for i in range(20):
-            obstacles.add((40, i))
+            for j in range(15, 25):
+                obstacles.add((j, i))
+                obstacles.add((j, i))
+
+        # for i in range(20):
+        #     obstacles.add((20, i))
+        # for i in range(10, 30):
+        #     obstacles.add((30, i))
+        # for i in range(20):
+        #     obstacles.add((40, i))
 
         self.obstacles = obstacles
         self.obstacles_tree = cKDTree(np.array(list(obstacles)))

@@ -485,9 +485,96 @@ def optimize_fov(fail_idx, x, y, psi, fov_angle, fov_depth, cx, cy):
             cost += 1  # Penalty for each point outside the FOV
         return cost
 
-    bounds = np.array([(psi - 10, psi + 10), (x - 0, x + 0), (y - 0, y + 0)])  # Adjust the bounds as necessary
+    # bounds = np.array([(psi - 0, psi + 0), (x - 0, x + 0), (y - 0, y + 0)])  # Adjust the bounds as necessary
+    bounds = np.array([(psi - 20, psi + 20), (x - 2, x + 2), (y - 0, y + 0)])  # Adjust the bounds as necessary
     best_params, best_cost = pso_optimize(cost_function, bounds)
     return best_params
+
+# def pso_optimize(cost_function, bounds, num_particles=30, maxiter=100, w=0.5, c1=0.8, c2=0.9):
+#     num_dimensions = len(bounds)
+#     swarm = [np.random.uniform(bounds[:, 0], bounds[:, 1], num_dimensions) for _ in range(num_particles)]
+#     velocity = [np.random.uniform(-1, 1, num_dimensions) for _ in range(num_particles)]
+#     personal_best_positions = swarm[:]
+#     personal_best_scores = [cost_function(p) for p in swarm]
+#     global_best_position = personal_best_positions[np.argmin(personal_best_scores)]
+#     global_best_score = min(personal_best_scores)
+#
+#     for iter in range(maxiter):
+#         for i in range(num_particles):
+#             r1, r2 = np.random.rand(), np.random.rand()
+#             velocity[i] = (w * velocity[i] +
+#                            c1 * r1 * (personal_best_positions[i] - swarm[i]) +
+#                            c2 * r2 * (global_best_position - swarm[i]))
+#             swarm[i] = swarm[i] + velocity[i]
+#             swarm[i] = np.clip(swarm[i], bounds[:, 0], bounds[:, 1])
+#             score = cost_function(swarm[i])
+#
+#             if score < personal_best_scores[i]:
+#                 personal_best_positions[i] = swarm[i]
+#                 personal_best_scores[i] = score
+#
+#             if score < global_best_score:
+#                 global_best_position = swarm[i]
+#                 global_best_score = score
+#
+#     return global_best_position, global_best_score
+#
+# def optimize_fov(fail_idx, x, y, psi, fov_angle, fov_depth, cx, cy):
+#     def cost_function_shift(params):
+#         new_x, new_y = params
+#         new_psi_radian = psi * (np.pi / 180)
+#
+#         left_angle = new_psi_radian + np.radians(fov_angle / 2)
+#         right_angle = new_psi_radian - np.radians(fov_angle / 2)
+#
+#         left_dx = fov_depth * np.cos(left_angle)
+#         left_dy = fov_depth * np.sin(left_angle)
+#
+#         right_dx = fov_depth * np.cos(right_angle)
+#         right_dy = fov_depth * np.sin(right_angle)
+#
+#         v1 = (new_x, new_y)
+#         v2 = (new_x + left_dx, new_y + left_dy)
+#         v3 = (new_x + right_dx, new_y + right_dy)
+#
+#         cost = 0
+#         if not point_in_triangle((cx, cy), v1, v2, v3):
+#             cost += 1  # Penalty for each point outside the FOV
+#         return cost
+#
+#     bounds_shift = np.array([(x - 1, x + 1), (y - 1, y + 1)])  # Adjust the bounds as necessary
+#     best_shift_params, best_shift_cost = pso_optimize(cost_function_shift, bounds_shift)
+#
+#     if best_shift_cost == 0:
+#         return psi, best_shift_params[0], best_shift_params[1]
+#
+#     def cost_function_angle(new_psi):
+#         new_psi_radian = new_psi * (np.pi / 180)
+#         new_x, new_y = best_shift_params
+#
+#         left_angle = new_psi_radian + np.radians(fov_angle / 2)
+#         right_angle = new_psi_radian - np.radians(fov_angle / 2)
+#
+#         left_dx = fov_depth * np.cos(left_angle)
+#         left_dy = fov_depth * np.sin(left_angle)
+#
+#         right_dx = fov_depth * np.cos(right_angle)
+#         right_dy = fov_depth * np.sin(right_angle)
+#
+#         v1 = (new_x, new_y)
+#         v2 = (new_x + left_dx, new_y + left_dy)
+#         v3 = (new_x + right_dx, new_y + right_dy)
+#
+#         cost = 0
+#         if not point_in_triangle((cx, cy), v1, v2, v3):
+#             cost += 1  # Penalty for each point outside the FOV
+#         return cost
+#
+#     bounds_angle = np.array([(psi - 20, psi + 20)])  # Adjust the bounds as necessary
+#     best_angle_params, best_angle_cost = pso_optimize(cost_function_angle, bounds_angle)
+#
+#     return best_angle_params[0], best_shift_params[0], best_shift_params[1]
+
 
 def draw_fov(x_coords, y_coords, psi_coords, c_segment, iteration, length=1.0, color='r', fov_angle=80, fov_depth=10):
     fail_cases = []
@@ -519,52 +606,65 @@ def draw_fov(x_coords, y_coords, psi_coords, c_segment, iteration, length=1.0, c
         v3 = (x + right_dx, y + right_dy)
 
         cx, cy = c_segment[idx, 0], c_segment[idx, 1]
+        # if point_in_triangle((cx, cy), v1, v2, v3):
+        #     plt.scatter(cx, cy, color='blue', marker='o')
+        #     success_cases.append(idx)
+        # else:
+        #     plt.scatter(cx, cy, color='red', marker='o')
+        #     fail_cases.append(idx)
+
+        # Perform optimization for the fail case
+        best_params = optimize_fov(idx, x, y, psi, fov_angle, fov_depth, cx, cy)
+        new_psi, new_x, new_y = best_params
+
+        # Update the coordinates and psi for the optimized fail case
+        x_coords[idx] = new_x
+        y_coords[idx] = new_y
+        psi_coords[idx] = new_psi
+
+        # plt.figure()
+        plt.scatter(x_coords, y_coords, color='g', marker='s', label='optimized positions')
+
+        # Draw optimized FOV
+        new_psi_radian = new_psi * (np.pi / 180)
+        new_dx = length * np.cos(new_psi_radian)
+        new_dy = length * np.sin(new_psi_radian)
+
+        plt.arrow(new_x, new_y, new_dx, new_dy, head_width=0.5, head_length=0.5, fc='purple', ec='purple')
+
+        new_left_angle = new_psi_radian + np.radians(fov_angle / 2)
+        new_right_angle = new_psi_radian - np.radians(fov_angle / 2)
+
+        new_left_dx = fov_depth * np.cos(new_left_angle)
+        new_left_dy = fov_depth * np.sin(new_left_angle)
+
+        new_right_dx = fov_depth * np.cos(new_right_angle)
+        new_right_dy = fov_depth * np.sin(new_right_angle)
+
+        new_fov_x = [new_x, new_x + new_left_dx, new_x + new_right_dx, new_x]
+        new_fov_y = [new_y, new_y + new_left_dy, new_y + new_right_dy, new_y]
+
+        plt.fill(new_fov_x, new_fov_y, color='blue', alpha=0.3)
+        # plt.scatter(c_segment[:, 0], c_segment[:, 1], color='orange', marker='o', label='c_segment')
+        # plt.xlabel('X coord')
+        # plt.ylabel('Y coord')
+        # plt.title('Optimized FOV with Particle Swarm Optimization')
+        # plt.legend()
+        # plt.grid(True)
+        # plt.show()
+
+
+        v1 = (new_x, new_y)
+        v2 = (new_x + new_left_dx, new_y + new_left_dy)
+        v3 = (new_x + new_right_dx, new_y + new_right_dy)
+
+        cx, cy = c_segment[idx, 0], c_segment[idx, 1]
         if point_in_triangle((cx, cy), v1, v2, v3):
             plt.scatter(cx, cy, color='blue', marker='o')
             success_cases.append(idx)
         else:
             plt.scatter(cx, cy, color='red', marker='o')
             fail_cases.append(idx)
-
-            # Perform optimization for the fail case
-            best_params = optimize_fov(idx, x, y, psi, fov_angle, fov_depth, cx, cy)
-            new_psi, new_x, new_y = best_params
-
-            # Update the coordinates and psi for the optimized fail case
-            x_coords[idx] = new_x
-            y_coords[idx] = new_y
-            psi_coords[idx] = new_psi
-
-            plt.figure()
-            plt.scatter(x_coords, y_coords, color='g', marker='s', label='optimized positions')
-
-            # Draw optimized FOV
-            new_psi_radian = new_psi * (np.pi / 180)
-            new_dx = length * np.cos(new_psi_radian)
-            new_dy = length * np.sin(new_psi_radian)
-
-            plt.arrow(new_x, new_y, new_dx, new_dy, head_width=0.5, head_length=0.5, fc='purple', ec='purple')
-
-            new_left_angle = new_psi_radian + np.radians(fov_angle / 2)
-            new_right_angle = new_psi_radian - np.radians(fov_angle / 2)
-
-            new_left_dx = fov_depth * np.cos(new_left_angle)
-            new_left_dy = fov_depth * np.sin(new_left_angle)
-
-            new_right_dx = fov_depth * np.cos(new_right_angle)
-            new_right_dy = fov_depth * np.sin(new_right_angle)
-
-            new_fov_x = [new_x, new_x + new_left_dx, new_x + new_right_dx, new_x]
-            new_fov_y = [new_y, new_y + new_left_dy, new_y + new_right_dy, new_y]
-
-            plt.fill(new_fov_x, new_fov_y, color='blue', alpha=0.3)
-            plt.scatter(c_segment[:, 0], c_segment[:, 1], color='orange', marker='o', label='c_segment')
-            plt.xlabel('X coord')
-            plt.ylabel('Y coord')
-            plt.title('Optimized FOV with Particle Swarm Optimization')
-            plt.legend()
-            plt.grid(True)
-            # plt.show()
 
     with open('./output/test_result/log.txt', 'a') as log_file:
         log_file.write(f"Iteration: {iteration}\n")

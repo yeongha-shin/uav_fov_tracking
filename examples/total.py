@@ -33,7 +33,7 @@ def run_simulation(start, goal, env, search_factory, move_step=1.0, min_distance
     }
 
     df = pd.DataFrame(data)
-    df.to_csv('./output/global/global_path.csv', index=False)
+    df.to_csv('./output2/global/global_path.csv', index=False)
     print("CSV file has been created with path and angles.")
 
 
@@ -51,8 +51,6 @@ def run_simulation(start, goal, env, search_factory, move_step=1.0, min_distance
         planner = search_factory("a_star", start=tuple(current_position), goal=tuple(mid_position), env=env)
         path, fig = planner.run()  # path 계획 메서드로 가정
 
-
-
         local_angles = [0]
         for i in range(1, len(path)):
             angle = calculate_angle(path[i - 1], path[i])
@@ -65,8 +63,8 @@ def run_simulation(start, goal, env, search_factory, move_step=1.0, min_distance
         }
 
         df = pd.DataFrame(local_data)
-        df.to_csv(f'./output/local/{index}.csv', index=False)
-        plt.savefig(f'./output/local/{index}.png')
+        df.to_csv(f'./output2/local/{index}.csv', index=False)
+        plt.savefig(f'./output2/local/{index}.png')
         # curve added
 
         curve_factory = CurveFactory()
@@ -132,9 +130,10 @@ env = Grid(51, 31)
 #                            Map generation (Outside) for
 # ------------------------------------------------------------------
 
-start = (5, 25)
+start = (13, 15)
 # goal = (45, 25)
-goal = (45, 5)
+# goal = (45, 5)
+goal = (20, 7)
 
 current_position = np.array(start, dtype=float)
 goal_position = np.array(goal, dtype=float)
