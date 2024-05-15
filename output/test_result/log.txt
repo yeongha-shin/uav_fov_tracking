@@ -1,0 +1,42 @@
+Log of FOV cases
+
+Iteration: 0
+Fail case (red): [3]
+Success case (blue): [0, 1, 2, 4]
+
+Iteration: 0
+Fail case (red): [3]
+Success case (blue): [0, 1, 2, 4]
+
+Iteration: 0
+Fail case (red): [3]
+Success case (blue): [0, 1, 2, 4]
+
+Iteration: 1
+Fail case (red): [2]
+Success case (blue): [0, 1, 3, 4]
+
+Iteration: 2
+Fail case (red): [1]
+Success case (blue): [0, 2, 3, 4]
+
+Iteration: 0
+Fail case (red): [3]
+Success case (blue): [0, 1, 2, 4]
+
+Iteration: 0
+Fail case (red): [3]
+Success case (blue): [0, 1, 2, 4]
+
+Iteration: 1
+Fail case (red): [2]
+Success case (blue): [0, 1, 3, 4]
+
+Iteration: 0
+Fail case (red): [3]
+Success case (blue): [0, 1, 2, 4]
+
+Iteration: 1
+Fail case (red): [2]
+Success case (blue): [0, 1, 3, 4]
+
