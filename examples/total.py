@@ -130,10 +130,12 @@ env = Grid(51, 31)
 #                            Map generation (Outside) for
 # ------------------------------------------------------------------
 
-start = (13, 15)
+start = (13, 25)
+# start = (13, 15)
 # goal = (45, 25)
 # goal = (45, 5)
-goal = (20, 7)
+# goal = (20, 7)
+goal = (45, 7)
 
 current_position = np.array(start, dtype=float)
 goal_position = np.array(goal, dtype=float)

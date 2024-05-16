@@ -382,7 +382,8 @@ def main():
     file_path_to_index = {path: i for i, path in enumerate(file_paths)}
     colors = ['b', 'g', 'r', 'c', 'm', 'y', 'k']
     search_factory = SearchFactory()
-    # planner = search_factory("a_star", start=tuple(current_position), goal=tuple(goal_position), env=env)
+    planner = search_factory("a_star", start=tuple(current_position), goal=tuple(goal_position), env=env)
+    first_path, first_fig = planner.run()
 
     # for i in range(len(c)):
     for i in range(len(c) - nc - 6):
@@ -405,6 +406,10 @@ def main():
         # path update
         new_start = (x_coords[0], y_coords[0])
         new_goal = (c_segment[0, 0], c_segment[0, 1])
+
+        print("new start", new_start)
+        print("new goal", new_goal)
+
         planner = search_factory("a_star", start=tuple(new_start), goal=tuple(new_goal), env=env)
         global_path, global_fig = planner.run()  # path 계획 메서드로 가정
 
@@ -421,7 +426,7 @@ def main():
         plt.show()
 
         # path update
-        c = global_path
+
 
 if __name__ == '__main__':
     main()
