@@ -33,49 +33,49 @@ def run_simulation(start, goal, env, search_factory, move_step=1.0, min_distance
     }
 
     df = pd.DataFrame(data)
-    df.to_csv('./output2/global/global_path.csv', index=False)
+    df.to_csv('./output2/global/global_path_500.csv', index=False)
     print("CSV file has been created with path and angles.")
 
 
     index = 0
     dis_thresh = 5
 
-    while np.linalg.norm(goal_position - mid_position) > min_distance:
-        print("running... DTG = ", np.linalg.norm(goal_position - current_position))
-
-        if index + dis_thresh > len(global_path):
-            mid_position = global_path[len(global_path)]
-        else:
-            mid_position = global_path[index+dis_thresh]
-
-        planner = search_factory("a_star", start=tuple(current_position), goal=tuple(mid_position), env=env)
-        path, fig = planner.run()  # path 계획 메서드로 가정
-
-        local_angles = [0]
-        for i in range(1, len(path)):
-            angle = calculate_angle(path[i - 1], path[i])
-            local_angles.append(angle)
-
-        local_data = {
-            'x': [p[0] for p in path],
-            'y': [p[1] for p in path],
-            'angle': local_angles
-        }
-
-        df = pd.DataFrame(local_data)
-        df.to_csv(f'./output2/local/{index}.csv', index=False)
-        plt.savefig(f'./output2/local/{index}.png')
-        # curve added
-
-        curve_factory = CurveFactory()
-        generator = curve_factory("bspline", step=0.01, k=3)
-        generator.run(path)
-
-        current_position = np.array(path[1], dtype=float)
-
-        index += 1
-
-    print("Reached the proximity of the goal.")
+    # while np.linalg.norm(goal_position - mid_position) > min_distance:
+    #     print("running... DTG = ", np.linalg.norm(goal_position - current_position))
+    #
+    #     if index + dis_thresh > len(global_path):
+    #         mid_position = global_path[len(global_path)]
+    #     else:
+    #         mid_position = global_path[index+dis_thresh]
+    #
+    #     planner = search_factory("a_star", start=tuple(current_position), goal=tuple(mid_position), env=env)
+    #     path, fig = planner.run()  # path 계획 메서드로 가정
+    #
+    #     local_angles = [0]
+    #     for i in range(1, len(path)):
+    #         angle = calculate_angle(path[i - 1], path[i])
+    #         local_angles.append(angle)
+    #
+    #     local_data = {
+    #         'x': [p[0] for p in path],
+    #         'y': [p[1] for p in path],
+    #         'angle': local_angles
+    #     }
+    #
+    #     df = pd.DataFrame(local_data)
+    #     df.to_csv(f'./output2/local/{index}.csv', index=False)
+    #     plt.savefig(f'./output2/local/{index}.png')
+    #     # curve added
+    #
+    #     curve_factory = CurveFactory()
+    #     generator = curve_factory("bspline", step=0.01, k=3)
+    #     generator.run(path)
+    #
+    #     current_position = np.array(path[1], dtype=float)
+    #
+    #     index += 1
+    #
+    # print("Reached the proximity of the goal.")
 
 
 def plot_distance_transform(env, name, width, height):
@@ -117,25 +117,32 @@ def plot_distance_transform(env, name, width, height):
     plt.title(name)
     plt.show()
 
-
 # ------------------------------------------------------------------
 #                            Map generation
 # ------------------------------------------------------------------
 
 # 환경 및 검색 팩토리 설정
-env = Grid(51, 31)
+# env = Grid(51, 31)
+# env = Grid(100, 100)
+env = Grid(500, 500)
 # env = Map(51, 31)
 
 # ------------------------------------------------------------------
 #                            Map generation (Outside) for
 # ------------------------------------------------------------------
 
-start = (13, 25)
-# start = (13, 15)
-# goal = (45, 25)
-# goal = (45, 5)
-# goal = (20, 7)
-goal = (45, 7)
+# 51 * 31
+# start = (13, 25)
+# goal = (45, 7)
+
+# 100 * 100
+# start = (40, 75)
+# goal = (40, 25)
+
+# 500 * 500
+start = (40 * 5, 75 * 5)
+goal = (40 * 5, 25 * 5)
+
 
 current_position = np.array(start, dtype=float)
 goal_position = np.array(goal, dtype=float)
