@@ -283,7 +283,7 @@ def main():
         print("new goal", new_goal)
 
         planner = search_factory("a_star", start=tuple(new_start), goal=tuple(new_goal), env=env)
-        follower_path, update_fig = planner.run()  # path 계획 메서드로 가정
+        # follower_path, update_fig = planner.run()  # path 계획 메서드로 가정
 
 
         # for i in range(len(follower_path) - 1):

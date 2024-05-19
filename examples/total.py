@@ -20,6 +20,8 @@ def run_simulation(start, goal, env, search_factory, move_step=1.0, min_distance
     planner = search_factory("a_star", start=tuple(current_position), goal=tuple(goal_position), env=env)
     global_path, global_fig = planner.run()  # path 계획 메서드로 가정
 
+    global_fig.show()
+
     # write csv file
     angles = [0]
     for i in range(1, len(global_path)):
@@ -33,7 +35,7 @@ def run_simulation(start, goal, env, search_factory, move_step=1.0, min_distance
     }
 
     df = pd.DataFrame(data)
-    df.to_csv('./output2/global/global_path_500.csv', index=False)
+    df.to_csv('./output2/global/global_path_100.csv', index=False)
     print("CSV file has been created with path and angles.")
 
 
@@ -123,8 +125,8 @@ def plot_distance_transform(env, name, width, height):
 
 # 환경 및 검색 팩토리 설정
 # env = Grid(51, 31)
-# env = Grid(100, 100)
-env = Grid(500, 500)
+env = Grid(100, 100)
+# env = Grid(500, 500)
 # env = Map(51, 31)
 
 # ------------------------------------------------------------------
@@ -136,12 +138,12 @@ env = Grid(500, 500)
 # goal = (45, 7)
 
 # 100 * 100
-# start = (40, 75)
-# goal = (40, 25)
+start = (45, 71)
+goal = (45, 29)
 
 # 500 * 500
-start = (40 * 5, 75 * 5)
-goal = (40 * 5, 25 * 5)
+# start = (40 * 5, 75 * 5)
+# goal = (40 * 5, 25 * 5)
 
 
 current_position = np.array(start, dtype=float)

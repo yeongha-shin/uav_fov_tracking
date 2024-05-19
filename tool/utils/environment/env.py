@@ -88,16 +88,16 @@ class Grid(Env):
 
 
         # if you use  # 100 * 100 turn on!
-        for i in range(40, 60):
-            for j in range(40, 60):
-                obstacles.add((j, i))
-                obstacles.add((j, i))
+        # for i in range(40, 60):
+        #     for j in range(40, 60):
+        #         obstacles.add((j, i))
+        #         obstacles.add((j, i))
 
         # for path planning
-        # for i in range(30, 70):
-        #     for j in range(30, 70):
-        #         obstacles.add((j, i))
-        #         obstacles.add((j, i))
+        for i in range(30, 70):
+            for j in range(30, 70):
+                obstacles.add((j, i))
+                obstacles.add((j, i))
 
 
         # if you use  # 500 * 500 turn on!

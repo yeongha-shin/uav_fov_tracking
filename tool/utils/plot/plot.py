@@ -88,7 +88,7 @@ class Plot:
                     )
                 )
 
-        plt.title(name)
+        # plt.title(name)
         plt.axis("equal")
 
         return self.fig
